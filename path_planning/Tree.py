@@ -13,6 +13,8 @@ class Node:
         self.parent = parent
         self.state = state
         self.children = []
+        if parent != None:
+            parent.children.append(self)
 
     def depth(self):
         """
@@ -40,13 +42,26 @@ class Tree:
         self.stateSpace = stateSpace
         self.nodes = []
         self.waypoints = []
-        self.startState = None
         self.goalState  = None
         random.seed()
+
+    @property
+    def start_state(self):
+        return self._start_state
+
+    @start_state.setter
+    def start_state(self, start_state):
+        self.reset(True)
+        n = Node(None, start_state)
+        self.setRoot(n)
 
     def setRoot(self, root):
         self.nodes.append(root)
         self.startState = root.state
+
+    @property
+    def last_node(self):
+        return self.nodes[len(self.nodes)-1]
 
     def run(self):
         """
@@ -55,7 +70,7 @@ class Tree:
         """
         for i in range(0,self.maxIterations):
             newNode = self.grow()
-            if (newNode is not None) and (self.stateSpace.distance(newNode.state, self.goalState)):
+            if (newNode is not None) and (self.stateSpace.distance(newNode.state, self.goalState) < self.goalMaxDist):
                 return True
         return False
 
@@ -79,7 +94,7 @@ class Tree:
         :param eraseRoot: Also erase the root
         """
         if len(self.nodes) > 0:
-            root = self.nodes.index(0)
+            root = self.nodes[0]
             del self.nodes[:]
             if eraseRoot:
                 del root
@@ -101,9 +116,7 @@ class Tree:
                 bestDistance = distance
                 best = n
 
-        NearestResult = collections.namedTuple('NearestResult', ['node', 'distance'])
-        result = NearestResult(best, bestDistance)
-        return result
+        return best, bestDistance
 
     def extend(self, target, source = None):
         """
@@ -113,8 +126,8 @@ class Tree:
         :return: the new node, None if we couldn't extend
         """
         if source == None:
-            source = self.nearest(target)
-            if source.node == None:
+            source, distance = self.nearest(target)
+            if source == None:
                 return None
 
         intermediateState = self.stateSpace.intermediateState(source.state, target,
@@ -122,11 +135,12 @@ class Tree:
         if not self.stateSpace.isTransitionValid(source.state, intermediateState):
             return None
 
-        self.nodes.append(source.node)
-        return source.node
+        n = Node(source, intermediateState)
+        self.nodes.append(n)
+        return n
 
 
-    def getPath(self, callback, destination, reverse = False):
+    def traversePath(self, callback, destination, reverse = False):
         node = destination
         if reverse:
             while node != None:
@@ -137,10 +151,12 @@ class Tree:
             while node != None:
                 ordered_nodes.insert(0, node)
                 node = node.parent
-
             for n in ordered_nodes:
                 callback(n.state)
 
+    def getPath(self, list, destination, reverse = False):
+        func = lambda node : list.append(node)
+        self.traversePath(func, destination, reverse)
 
 
 

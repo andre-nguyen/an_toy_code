@@ -11,7 +11,7 @@ class StateSpace:
         return
 
     @abc.abstractmethod
-    def intermediateState(self, source, target):
+    def intermediateState(self, source, target, step_size):
         return
 
     @abc.abstractmethod
@@ -26,13 +26,8 @@ class StateSpace:
     def isTransitionValid(self, source, goal):
         return
 
-class StateSpace2D:
-    def __init__(self):
-        self.x = 0
-
 class StateSpace3D:
     def __init__(self):
         self.x = 0
 
-StateSpace.register(StateSpace2D)
 StateSpace.register(StateSpace3D)
