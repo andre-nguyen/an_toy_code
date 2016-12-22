@@ -1,3 +1,4 @@
+import collections
 import random
 """
 Tree class and what is needed to get it working
@@ -14,6 +15,10 @@ class Node:
         self.children = []
 
     def depth(self):
+        """
+        Counts the number of ancestors
+        :return: Number of ancestors
+        """
         n = 0;
         p = self.parent
         while p is not None:
@@ -39,11 +44,15 @@ class Tree:
         self.goalState  = None
         random.seed()
 
-
     def setRoot(self, root):
         self.nodes.append(root)
+        self.startState = root.state
 
     def run(self):
+        """
+        Execute RRT algorithm
+        :return: True if a path was found
+        """
         for i in range(0,self.maxIterations):
             newNode = self.grow()
             if (newNode is not None) and (self.stateSpace.distance(newNode.state, self.goalState)):
@@ -51,6 +60,10 @@ class Tree:
         return False
 
     def grow(self):
+        """
+        Pick a random state and attempt to extend the tree towards it
+        :return:
+        """
         r = random.random()
         if r < self.goalBias:
             return self.extend(self.goalState)
@@ -59,9 +72,12 @@ class Tree:
             return self.extend(state)
         else:
             return self.extend(self.stateSpace.randomState())
-        return
 
     def reset(self, eraseRoot = False):
+        """
+        Remove all tree nodes
+        :param eraseRoot: Also erase the root
+        """
         if len(self.nodes) > 0:
             root = self.nodes.index(0)
             del self.nodes[:]
@@ -69,15 +85,64 @@ class Tree:
                 del root
             else:
                 self.nodes.append(root)
-        return
 
-    def nearest(self):
-        return
+    def nearest(self, state):
+        """
+        Find the node in the tree closest to the given @state
+        :param state:
+        :return:
+        """
+        bestDistance = -1.0
+        best = None
 
-    def extend(self):
-        return
+        for n in self.nodes:
+            distance = self.stateSpace.distance(n.state, state)
+            if (bestDistance < 0) or (distance < bestDistance):
+                bestDistance = distance
+                best = n
 
-    def getPath(self):
-        return
+        NearestResult = collections.namedTuple('NearestResult', ['node', 'distance'])
+        result = NearestResult(best, bestDistance)
+        return result
+
+    def extend(self, target, source = None):
+        """
+        Grow the tree in the direction of the @target
+        :param target: Where you want to go
+        :param source: From where you are starting
+        :return: the new node, None if we couldn't extend
+        """
+        if source == None:
+            source = self.nearest(target)
+            if source.node == None:
+                return None
+
+        intermediateState = self.stateSpace.intermediateState(source.state, target,
+                                                              self.stepSize)
+        if not self.stateSpace.isTransitionValid(source.state, intermediateState):
+            return None
+
+        self.nodes.append(source.node)
+        return source.node
+
+
+    def getPath(self, callback, destination, reverse = False):
+        node = destination
+        if reverse:
+            while node != None:
+                callback(node.state)
+                node = node.parent
+        else:
+            ordered_nodes = []
+            while node != None:
+                ordered_nodes.insert(0, node)
+                node = node.parent
+
+            for n in ordered_nodes:
+                callback(n.state)
+
+
+
+
 
 
