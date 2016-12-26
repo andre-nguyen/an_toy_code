@@ -3,13 +3,14 @@ from StateSpace.States import Point2D
 from Tree import Tree
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
+from scipy import misc as m
 """
 Test out the rrt algorithm
 """
 
 def treeTraversal(node, segments):
     n = node.state
-    if node.parent == None:
+    if node.parent is None:
         segments.append([(0.0, 0.0), (n.x, n.y)])
     else:
         p = node.parent.state
@@ -20,15 +21,14 @@ def treeTraversal(node, segments):
 def main():
     state_space = StateSpace2D(100.0, 100.0)
     tree = Tree(state_space)
-    tree.stepSize = 1
-    tree.goalMaxDist = 1
-    tree.goalBias = 0.2
+    tree.step_size = 1
+    tree.goal_max_dist = 1
+    tree.goal_bias = 0.2
     tree.start_state = Point2D(0.0,0.0)
-    tree.goalState = Point2D(40.0,40.0)
+    tree.goal_state = Point2D(40.0, 40.0)
     tree.run()
     path = []
     tree.getPath(path, tree.last_node)
-    nodes = tree.nodes
     segments = []
     treeTraversal(tree.nodes[0], segments)
 
@@ -42,5 +42,13 @@ def main():
     plt.show()
     plt.waitforbuttonpress()
 
+def main_obstacles():
+    map = m.imread('Untitled.bmp')
+    # Binarize the map and the invert it
+    map[map>0] = 2
+    map[map==0] = 1
+    map[map==2] = 0
+
+
 if __name__ == '__main__':
-    main()
+    main_obstacles()

@@ -32,17 +32,17 @@ class Node:
         self.children.append(node)
 
 class Tree:
-    def __init__(self, stateSpace):
-        self.stepSize = 0.1
-        self.maxStepSize = 5.0
-        self.maxIterations = 1000
-        self.goalBias = 0
-        self.waypointBias = 0
-        self.goalMaxDist = 0.1
-        self.stateSpace = stateSpace
+    def __init__(self, state_space):
+        self.step_size = 0.1
+        self.max_step_size = 5.0
+        self.max_iterations = 1000
+        self.goal_bias = 0
+        self.waypoint_bias = 0
+        self.goal_max_dist = 0.1
+        self.state_space = state_space
         self.nodes = []
         self.waypoints = []
-        self.goalState  = None
+        self.goal_state  = None
         random.seed()
 
     @property
@@ -68,9 +68,9 @@ class Tree:
         Execute RRT algorithm
         :return: True if a path was found
         """
-        for i in range(0,self.maxIterations):
+        for i in range(0, self.max_iterations):
             newNode = self.grow()
-            if (newNode is not None) and (self.stateSpace.distance(newNode.state, self.goalState) < self.goalMaxDist):
+            if (newNode is not None) and (self.state_space.distance(newNode.state, self.goal_state) < self.goal_max_dist):
                 return True
         return False
 
@@ -80,13 +80,13 @@ class Tree:
         :return:
         """
         r = random.random()
-        if r < self.goalBias:
-            return self.extend(self.goalState)
-        elif r < (self.waypointBias + self.goalBias) and (len(self.waypoints)):
+        if r < self.goal_bias:
+            return self.extend(self.goal_state)
+        elif r < (self.waypoint_bias + self.goal_bias) and (len(self.waypoints)):
             state = random.sample(self.waypoints, 1)
             return self.extend(state)
         else:
-            return self.extend(self.stateSpace.randomState())
+            return self.extend(self.state_space.random_state())
 
     def reset(self, eraseRoot = False):
         """
@@ -111,7 +111,7 @@ class Tree:
         best = None
 
         for n in self.nodes:
-            distance = self.stateSpace.distance(n.state, state)
+            distance = self.state_space.distance(n.state, state)
             if (bestDistance < 0) or (distance < bestDistance):
                 bestDistance = distance
                 best = n
@@ -130,9 +130,9 @@ class Tree:
             if source == None:
                 return None
 
-        intermediateState = self.stateSpace.intermediateState(source.state, target,
-                                                              self.stepSize)
-        if not self.stateSpace.isTransitionValid(source.state, intermediateState):
+        intermediateState = self.state_space.intermediate_state(source.state, target,
+                                                                self.step_size)
+        if not self.state_space.is_transition_valid(source.state, intermediateState):
             return None
 
         n = Node(source, intermediateState)
