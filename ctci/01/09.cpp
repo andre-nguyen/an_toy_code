@@ -2,6 +2,15 @@
 #include <string>
 using namespace std;
 
+/**
+ * Check is s1 is a rotation of s2. Find the point where s2 starts matching s1
+ * and start counting how many chars match. Check if the rest of s2 that wasn't
+ * counted is a substring of s1.
+ * @method isrot
+ * @param  s1    [description]
+ * @param  s2    [description]
+ * @return       [description]
+ */
 bool isrot(string s1, string s2) {
     int count = 0;
     for(int i = 0; i < s1.length(); ++i) {
