@@ -2,6 +2,14 @@
 #include <string>
 using namespace std;
 
+/**
+ * Takes a string (already with the correct size to include extra chars) and
+ * changes spaces to "%20". Creates a new string to do so.
+ * @method urlize
+ * @param  original    Original string
+ * @param  real_length Real length of the string without extra spaces
+ * @return             New string urlized
+ */
 string urlize(string original, int real_length) {
   char url[original.length()];
   int j = 0;

@@ -7,6 +7,11 @@
 //#define N 3
 using namespace std;
 
+/**
+ * console out a matrix
+ * @method printmatrix
+ * @param  mat      2D array
+ */
 void printmatrix(double mat[][N]) {
   for(int i = 0; i < N; ++i) {
     for(int j = 0; j < N; ++j) {
@@ -16,6 +21,12 @@ void printmatrix(double mat[][N]) {
   }
 }
 
+/**
+ * Rotate a matrix by writing a line to a column to a new matrix
+ * @method rotate90
+ * @param  [name]   [description]
+ * @param  [name]   [description]
+ */
 void rotate90(double src[][N], double dst[][N]) {
   for(int i = 0; i < N; ++i) {
     for(int j = 0; j < N; ++j) {
@@ -32,6 +43,11 @@ void swap(double* d1, double* d2, double* d3, double* d4){
   *d1 = tmp;
 }
 
+/**
+ * Rotate a matrix in place by swapping elements 4 at a time
+ * @method rotateinplace
+ * @param  [name]        [description]
+ */
 void rotateinplace(double m[][N]) {
   const int Z = N - 1;
   for(int i = 0; i < max((N-1)/2, 1); ++i) {
@@ -53,7 +69,7 @@ int main() {
                           {5,6,7,8},
                           {9,10,11,12},
                           {13,14,15,16}};
-                          
+
   double dst[N][N];
   printmatrix(array);
   cout << endl;

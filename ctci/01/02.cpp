@@ -5,6 +5,12 @@ using namespace std;
 
 typedef map<char, int> hist;
 
+/**
+ * Build a frequency count of all chars in a string
+ * @method BuildHistogram
+ * @param  s              The string
+ * @param  h              The histogram
+ */
 void BuildHistogram(string s, hist& h) {
   for(char c : s) {
     auto it = h.find(c);
@@ -19,6 +25,13 @@ void BuildHistogram(string s, hist& h) {
   }
 }
 
+/**
+ * Check if all char counts match between two histograms
+ * @method CompareHistogram
+ * @param  h1               Histogram of first string
+ * @param  h2               Histogram of second string
+ * @return                  Bool if they match
+ */
 bool CompareHistogram(hist& h1, hist& h2) {
   if(h1.size() != h2.size()) return false;
 

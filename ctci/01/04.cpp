@@ -6,6 +6,12 @@
 #include <iostream>
 using namespace std;
 
+/**
+ * Remove spaces from a string
+ * @method removespaces
+ * @param  s            String to process
+ * @return              String without spaces
+ */
 string removespaces(string s) {
   string ret = "";
   for(char c : s) {
@@ -14,6 +20,14 @@ string removespaces(string s) {
   return ret;
 }
 
+/**
+ * Checks if a string can become a palindrome. Sorts the string and then makes
+ * only 1 character has an odd count. The count is done by iterating through the
+ * instead of using a secondary data structure.
+ * @method palindromable
+ * @param  s             The string
+ * @return               If it's palindromable
+ */
 bool palindromable(string s) {
   string test = removespaces(s);
   cout << test << endl;
