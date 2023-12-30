@@ -117,24 +117,24 @@ int getCalibration2(const std::string &s)
     // std::cout << "\t" << num << "\n";
     return std::atoi(num);
 }
-
-int main()
-{
-    std::string s;
-    int sum = 0;
-
-    while (!std::cin.eof())
-    {
-        std::getline(std::cin, s);
-        if (s.empty())
-        {
-            break;
-        }
-
-        int calibration = getCalibration2(s);
-        sum += calibration;
-        std::cout << "input: " << s << " " << calibration << "\n";
-    }
-    std::cout << "sum: " << sum << "\n";
-    return 0;
-}
+//
+//int main()
+//{
+//    std::string s;
+//    int sum = 0;
+//
+//    while (!std::cin.eof())
+//    {
+//        std::getline(std::cin, s);
+//        if (s.empty())
+//        {
+//            break;
+//        }
+//
+//        int calibration = getCalibration2(s);
+//        sum += calibration;
+//        std::cout << "input: " << s << " " << calibration << "\n";
+//    }
+//    std::cout << "sum: " << sum << "\n";
+//    return 0;
+//}
